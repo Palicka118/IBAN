@@ -40,6 +40,7 @@ public class IBAN {
             else{
                 iBAN="Zadejte prosím CZ nebo SK";}
             String cIban = GetIban(ibanWOcc, suffix, prefix, bBAn);
+            System.out.println(iBAN);
             return  cIban;
         }
         public String GetIban(String ibanWOcc, String suffix, String prefix, String bBan){
