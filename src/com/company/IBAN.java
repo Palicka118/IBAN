@@ -1,9 +1,6 @@
 package com.company;
 
-import com.sun.org.apache.xpath.internal.operations.Mod;
-
 import java.util.Scanner;
-import java.io.*;
 
 public class IBAN {
 
@@ -33,19 +30,20 @@ public class IBAN {
             String bBAn = splitBaCC[1]; // číslo účtu v bance
             String suffix = splitBaCC[2];//Kód banky
             String iBAN;
-            String ibanWOcc = "00".concat(suffix).concat(prefix).concat(bBAn);
             if (BuOrigin.contains("CZ") || BuOrigin.contains("SK")) {
-                iBAN = BuOrigin.concat("00" + suffix).concat(prefix).concat(bBAn);
+                //iBAN = BuOrigin.concat("00" + suffix).concat(prefix).concat(bBAn);
+                if (BAccV()) {
+                    String cIban = BuOrigin.concat(GetIban(suffix, prefix, bBAn).concat(suffix).concat(prefix).concat(bBAn));
+                    System.out.println(cIban);
+                    return cIban;
+                } else return "Zadali jste špatné číslo bankovního účtu";
             } else {
                 iBAN = "Zadejte prosím CZ nebo SK";
-                System.out.println(iBAN);
+                return iBAN;
             }
-            String cIban = "CZ".concat(GetIban(ibanWOcc, suffix, prefix, bBAn).concat(suffix).concat(prefix).concat(bBAn));
-            System.out.println(cIban);
-            return cIban;
         }
 
-        public String GetIban(String ibanWOcc, String suffix, String prefix, String bBan) {
+        public String GetIban(String suffix, String prefix, String bBan) {
             String cc;
             if (BuOrigin.equals("CZ")) {
                 cc = "123500";
@@ -53,21 +51,25 @@ public class IBAN {
                 cc = "282000";
             }
             String srIban = suffix.concat(prefix).concat(bBan).concat(cc);
-            int tmpIban = (mod(srIban, 97));
+            int tmpIban = (mod(srIban));
             tmpIban = 98 - tmpIban;
             srIban = String.valueOf(tmpIban);
             return srIban;
 
         }
 
-        static int mod(String num, int a) {
+        static int mod(String num) {
             int res = 0;
 
             for (int i = 0; i < num.length(); i++)
-                res = (res * 10 + (int) num.charAt(i) - '0') % a;
+                res = (res * 10 + (int) num.charAt(i) - '0') % 97;
 
             return res;
         }
 
+        public boolean BAccV() {
+            return BU.matches("[0-9]{6}-?[0-9]{10}/?[0-9]{4}");
+
+        }
     }
 }
