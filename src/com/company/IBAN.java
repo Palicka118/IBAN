@@ -18,56 +18,56 @@ public class IBAN {
         String BU;
         String BuOrigin;
 
-        public BUM(){
+        public BUM() {
             Scanner sc = new Scanner(System.in);
             System.out.println("Enter your bank account number: " + "e.g. 000000-123456789/0300 or 000000-123456789/7500");
             BU = sc.next();
             System.out.println("Are you from CZ or SK? ");
-            BuOrigin=sc.next();
+            BuOrigin = sc.next();
 
         }
-        public String getDetails(){
+
+        public String getDetails() {
             String[] splitBaCC = BU.split("-|/");
             String prefix = splitBaCC[0]; //Předčíslí
             String bBAn = splitBaCC[1]; // číslo účtu v bance
             String suffix = splitBaCC[2];//Kód banky
             String iBAN;
-            String ibanWOcc =  "00".concat(suffix).concat(prefix).concat(bBAn);
-            System.out.println(ibanWOcc);
-            if(BuOrigin.contains("CZ")||BuOrigin.contains("SK")){
+            String ibanWOcc = "00".concat(suffix).concat(prefix).concat(bBAn);
+            if (BuOrigin.contains("CZ") || BuOrigin.contains("SK")) {
                 iBAN = BuOrigin.concat("00" + suffix).concat(prefix).concat(bBAn);
+            } else {
+                iBAN = "Zadejte prosím CZ nebo SK";
+                System.out.println(iBAN);
             }
-            else{
-                iBAN="Zadejte prosím CZ nebo SK";}
-            String cIban = GetIban(ibanWOcc, suffix, prefix, bBAn);
-            System.out.println(iBAN);
-            return  cIban;
+            String cIban = "CZ".concat(GetIban(ibanWOcc, suffix, prefix, bBAn).concat(suffix).concat(prefix).concat(bBAn));
+            System.out.println(cIban);
+            return cIban;
         }
-        public String GetIban(String ibanWOcc, String suffix, String prefix, String bBan){
+
+        public String GetIban(String ibanWOcc, String suffix, String prefix, String bBan) {
             String cc;
-            if(BuOrigin.equals("CZ")){
+            if (BuOrigin.equals("CZ")) {
                 cc = "123500";
-            }
-            else{
+            } else {
                 cc = "282000";
             }
-            String srIban =suffix.concat(prefix).concat(bBan).concat(cc);
-            int tmpIban=(mod(srIban, 97));
-
+            String srIban = suffix.concat(prefix).concat(bBan).concat(cc);
+            int tmpIban = (mod(srIban, 97));
+            tmpIban = 98 - tmpIban;
+            srIban = String.valueOf(tmpIban);
             return srIban;
 
         }
-        static int mod(String num, int a)
-        {
+
+        static int mod(String num, int a) {
             int res = 0;
 
             for (int i = 0; i < num.length(); i++)
-                res = (res * 10 + (int)num.charAt(i) - '0') % a;
+                res = (res * 10 + (int) num.charAt(i) - '0') % a;
 
             return res;
         }
 
     }
 }
-
-//12, 35 ... 28,20
